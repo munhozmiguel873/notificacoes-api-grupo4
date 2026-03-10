@@ -16,7 +16,7 @@ function show(req, res) {
         return res.status(404).json({ erro: 'Evento não encontrado' });
     }
 
-    res.jso(evento);
+    res.json(evento);
 }
 
 // POST - /eventos - criar novo
@@ -43,9 +43,11 @@ function store(req, res) {
 function update(req, res) {
     const id = parseInt(req.params.id);
     const eventoAtualizado = EventoModel.atualizar(id, req.body);
+
     if (!eventoAtualizado) {
         return res.status(404).json({ erro: "Evento não encontrado" });
     }
+
     res.json(eventoAtualizado);
 }
 
@@ -54,9 +56,11 @@ function update(req, res) {
 function destroy(req, res) {
     const id = parseInt(req.params.id);
     const deletado = EventoModel.deletar(id);
+
     if (!deletado) {
         return res.status(404).json({ erro: "Evento não encontrado" });
     }
+    
     res.status(204).send();
 }
 

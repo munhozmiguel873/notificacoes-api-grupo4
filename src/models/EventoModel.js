@@ -31,7 +31,7 @@ function listarTodos() {
 
 // Buscar um evento pelo ID
 function buscarPorId(id) {
-return eventos.find((evento) => evento.id === id);
+    return eventos.find((evento) => evento.id === id);
 }
 
 
