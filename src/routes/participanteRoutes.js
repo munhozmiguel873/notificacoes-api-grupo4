@@ -15,62 +15,64 @@ const ParticipanteController = require("../controllers/ParticipanteController");
  *       properties:
  *         id:
  *           type: integer
- *           description: OD gerado automaticamente
+ *           description: ID gerado automaticamente
  *         nome:
  *           type: string
- *           discription:  Nome do participante
+ *           description: Nome do participante
  *         email:
  *           type: string
- *           discription: E-mail do participante
- *     example:
- *       id: 1
- *       nome: Ana Silva
- *       email: ana@gmail.com            
+ *           description: E-mail do participante
+ *       example:
+ *         id: 1
+ *         nome: Ana Silva
+ *         email: ana@gmail.com
  */
 
 /**
  * @swagger
  * /participantes:
  *   get:
- *     sumarry: Listar todos os participantes
- *     tags: [Participantes]
+ *     summary: Listar todos os participantes
+ *     tags:
+ *       - Participantes
  *     responses:
- *       200:
- *         discription: Lista de participantes
+ *       '200':
+ *         description: Lista de participantes
  *         content:
- *            application/json:
- *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/Participantes'
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Participante'
  */
-router.get("/", ParticipanteController.index); 
-  
+router.get("/", ParticipanteController.index);
+
 
 /**
  * @swagger
  * /participantes/{id}:
  *   get:
  *     summary: Buscar participante por ID
- *     tags: [Participantes]
+ *     tags:
+ *       - Participantes
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID por participante
- *    responses:
- *      200:
- *        description: Participante encontrado
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Participante'
- *      404:
- *        description: Participante não encontrado
+ *         description: ID do participante
+ *     responses:
+ *       '200':
+ *         description: Participante encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Participante'
+ *       '404':
+ *         description: Participante não encontrado
  */
-router.get("/:id", ParticipanteController.show); 
+router.get("/:id", ParticipanteController.show);
 
 
 /**
@@ -78,10 +80,11 @@ router.get("/:id", ParticipanteController.show);
  * /participantes:
  *   post:
  *     summary: Inscrever-se
- *     tags: [Participantes]
+ *     tags:
+ *       - Participantes
  *     requestBody:
  *       required: true
- *       content: 
+ *       content:
  *         application/json:
  *           schema:
  *             type: object
@@ -93,14 +96,14 @@ router.get("/:id", ParticipanteController.show);
  *                 type: string
  *               email:
  *                 type: string
- *          example:
- *            nome: Pedro Augusto
- *            email: pedroa@gmail.com
+ *           example:
+ *             nome: Pedro Augusto
+ *             email: pedroa@gmail.com
  *     responses:
- *      201:
- *        description: Se inscreveu com sucesso
- *      400:
- *        description: Dados inválidos 
+ *       '201':
+ *         description: Se inscreveu com sucesso
+ *       '400':
+ *         description: Dados inválidos
  */
 router.post("/", ParticipanteController.store);
 
@@ -110,7 +113,8 @@ router.post("/", ParticipanteController.store);
  * /participantes/{id}:
  *   put:
  *     summary: Atualizar um participante
- *     tags: [Participantes]
+ *     tags:
+ *       - Participantes
  *     parameters:
  *       - in: path
  *         name: id
@@ -119,22 +123,22 @@ router.post("/", ParticipanteController.store);
  *           type: integer
  *     requestBody:
  *       required: true
- *       content: 
+ *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *              nome:
- *                type: string
- *              email:
- *                type: string
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
  *     responses:
- *       200:
- *         description: Participante autalizado
- *       404:
- *         description: Evento não encontrado
+ *       '200':
+ *         description: Participante atualizado
+ *       '404':
+ *         description: Participante não encontrado
  */
-router.put("/:id", ParticipanteController.update); 
+router.put("/:id", ParticipanteController.update);
 
 
 /**
@@ -142,7 +146,8 @@ router.put("/:id", ParticipanteController.update);
  * /participantes/{id}:
  *   delete:
  *     summary: Deletar um participante
- *     tags: [Participantes]
+ *     tags:
+ *       - Participantes
  *     parameters:
  *       - in: path
  *         name: id
@@ -150,11 +155,11 @@ router.put("/:id", ParticipanteController.update);
  *         schema:
  *           type: integer
  *     responses:
- *       204:
+ *       '204':
  *         description: Participante deletado
- *       404:
- *         description: Participant não encontrado
+ *       '404':
+ *         description: Participante não encontrado
  */
-router.delete("/:id", ParticipanteController.destroy); 
+router.delete("/:id", ParticipanteController.destroy);
 
 module.exports = router;

@@ -7,6 +7,9 @@ const app = express();
 
 // Middleware para ler JSON no body
 app.use(express.json());
+
+// Importar middleware e rotas
+const logger = require("./middlewares/logger");
 app.use(logger);
 
 
@@ -14,7 +17,6 @@ app.use(logger);
 const eventoRoutes = require("./routes/eventoRoutes");
 const participanteRoutes = require("./routes/participanteRoutes");
 const inscricaoRoutes = require("./routes/inscricaoRoutes");
-const logger = require("./middlewares/logger");
 
 
 // Documentação Swagger
