@@ -1,4 +1,3 @@
-// src/helpers/validators.js
 /**
 * Verifica se um valor existe e não é string vazia
 */
@@ -11,6 +10,7 @@ function isRequired(valor, nomeCampo) {
     }
     return null; // null = sem erro
 }
+
 /**
 * Verifica se é um e-mail válido (validação simples)
 */
@@ -22,6 +22,7 @@ function isEmail(valor) {
     }
     return null;
 }
+
 /**
 * Verifica se é um número inteiro positivo
 */
@@ -32,6 +33,7 @@ function isPositiveInteger(valor, nomeCampo) {
     }
     return null;
 }
+
 /**
 * Verifica se uma string tem tamanho mínimo
 */
@@ -43,6 +45,7 @@ function minLength(valor, min, nomeCampo) {
     }
     return null;
 }
+
 /**
 * Executa um array de validações e retorna os erros encontrados
 */
@@ -50,6 +53,8 @@ function validar(validacoes) {
     const erros = validacoes.filter((erro) => erro !== null);
     return erros.length > 0 ? erros : null;
 }
+
+
 module.exports = {
     isRequired,
     isEmail,
