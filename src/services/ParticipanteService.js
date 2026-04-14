@@ -61,9 +61,9 @@ function deletar(id) {
     // Delete, lance NotFoundError se não encontrar
     const deletado = ParticipanteModel.deletar(id);
     if (!deletado) {
-        throw nem NotFoundError("Participante");
+        throw new NotFoundError("Participante");
     }
-    return true:
+    return true;
 }
 
 
