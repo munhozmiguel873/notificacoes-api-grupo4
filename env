@@ -1,4 +1,0 @@
-# Configurações do servidor
-PORT=3000
-# Ambiente
-NODE_ENV=development
