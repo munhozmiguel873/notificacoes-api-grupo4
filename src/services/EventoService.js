@@ -9,13 +9,13 @@ const {
 } = require("../helpers/validators");
 
 
-function listarTodos() {
-    return EventoModel.listarTodos();
+async function listarTodos() {
+    return await EventoModel.listarTodos();
 }
 
 
-function buscarPorId(id) {
-    const evento = EventoModel.buscarPorId(id);
+async function buscarPorId(id) {
+    const evento = await EventoModel.buscarPorId(id);
     if (!evento) {
         throw new NotFoundError("Evento");
     }
@@ -23,7 +23,7 @@ function buscarPorId(id) {
 }
 
 
-function criar(dados) {
+async function criar(dados) {
     const { nome, descricao, data, local, capacidade } = dados;
     // Validação
     const erros = validar([
@@ -35,11 +35,11 @@ function criar(dados) {
     if (erros) {
         throw new ValidationError(erros.join("; "));
     }
-    return EventoModel.criar({ nome, descricao, data, local, capacidade });
+    return await EventoModel.criar({ nome, descricao, data, local, capacidade });
 }
 
 
-function atualizar(id, dados) {
+async function atualizar(id, dados) {
     const { nome, capacidade } = dados;
     // Validações (campos opcionais no update)
     const erros = validar([
@@ -49,7 +49,7 @@ function atualizar(id, dados) {
     if (erros) {
         throw new ValidationError(erros.join("; "));
     }
-    const eventoAtualizado = EventoModel.atualizar(id, dados);
+    const eventoAtualizado = await EventoModel.atualizar(id, dados);
     if (!eventoAtualizado) {
         throw new NotFoundError("Evento");
     }
@@ -57,8 +57,8 @@ function atualizar(id, dados) {
 }
 
 
-function deletar(id) {
-    const deletado = EventoModel.deletar(id);
+async function deletar(id) {
+    const deletado = await EventoModel.deletar(id);
     if (!deletado) {
         throw new NotFoundError("Evento");
     }
