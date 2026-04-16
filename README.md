@@ -37,3 +37,4 @@ src/
 |---------|-----------|
 | `npm start` | Inicia o servidor (produção) |
 | `npm run dev` | Inicia com Nodemon (desenvolvimento) |
+mi
