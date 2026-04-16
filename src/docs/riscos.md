@@ -7,5 +7,7 @@
 | 4 | Tempo insuficiente para todas as features | Média | Alto | 🟠 | Priorizar features essenciais
 | 5 | Má Comunicação | Alto | Médio | 🟠 | Sempre documentar o que está fazendo e conversar com todos da equipe |
 | 6 | Tempo de execução e extensão | Média | Alto | 🟠 |  Instale apenas o essencial e remova extensões não utilizadas |
-| 7 | Mudanças Frequentes | Média | Média | 🟡 | Sempre ter uma boa organização do prjeto para que aja mudanças frequentes, além da comucação com a equipe 
-| 8 | Tempo de execução e extensão | Média | Alto | 🟠 |  Instale apenas o essencial e remova extensões não utilizadas |
+| 7 | Mudanças Frequentes | Média | Média | 🟡 | Sempre ter uma boa organização do prjeto para que aja mudanças frequentes |
+| 8 | Vazamento de Dados por Shadow AI | Alto | Alto | 🟠 | Utilizar softwares de segurança |
+| 9 | Negligência de Testes | Média | Média | 🟡 | Sempre testar o projeto quando finalizar alguma parte dele |
+| 10 | Aumento de Escopo (Scope Creep) | Alta | Média | 🟠 | Ajustar o escopo e organiza-ló | 
