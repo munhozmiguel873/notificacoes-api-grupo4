@@ -1,4 +1,4 @@
-// src/models/InscricaoModel.js
+/// src/models/InscricaoModel.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
