@@ -1,9 +1,11 @@
 # Estimativa de Custos do Projeto
+
 ## Recursos Humanos (simulado)
 | Papel | Qtd | Horas/semana | Semanas | Custo/hora | Total |
 |-------|-----|-------------|---------|------------|-------|
 | Dev Back-End Jr | 3 | 8h | 16 | R$ 30 | R$ 11.520 |
 | **Subtotal RH** | | | | | **R$ 11.520** |
+
 ## Infraestrutura
 | Item | Custo mensal | Meses | Total |
 |------|-------------|-------|-------|
@@ -12,12 +14,14 @@
 | Mailtrap (free tier) | R$ 0 | 4 | R$ 0 |
 | Domínio (opcional) | R$ 40/ano | — | R$ 0 |
 | **Subtotal Infra** | | | **R$ 0** |
+
 ## Ferramentas
 | Ferramenta | Licença | Custo |
 |---|---|---|
 | VS Code | Gratuita | R$ 0 |
 | Postman | Gratuita (básica) | R$ 0 |
-| GitHub | Gratuita | R$ 0 |
+| GitHub  | Gratuita | R$ 0 |
+
 ## Resumo
 | Categoria | Valor |
 |---|---|
@@ -25,3 +29,20 @@
 | Infraestrutura | R$ 0 |
 | Ferramentas | R$ 0 |
 | **TOTAL ESTIMADO** | **R$ 11.520** |
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+## Matriz de Responsabilidades (RACI)
+| Atividade           | Miguel | Pietro | Pedro  |
+|---------------------|--------|--------|--------|
+| Models/Migrations   | R      | C      | I      |
+| Controllers/Routes  | R      | I      | A      |
+| Services            | C      | I      | R      |
+| Documentação        | R      | I      | C      |
+| Testes Postman      | C      | I      | R      |
+| Deploy              | I      | C      | R/A    |
+
+**R** = Responsável  
+**A** = Aprovador  
+**C** = Consultado  
+**I** = Informado  

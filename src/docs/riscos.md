@@ -10,4 +10,6 @@
 | 7 | Mudanças Frequentes | Média | Média | 🟡 | Sempre ter uma boa organização do prjeto para que aja mudanças frequentes |
 | 8 | Vazamento de Dados por Shadow AI | Alto | Alto | 🟠 | Utilizar softwares de segurança |
 | 9 | Negligência de Testes | Média | Média | 🟡 | Sempre testar o projeto quando finalizar alguma parte dele |
-| 10 | Aumento de Escopo (Scope Creep) | Alta | Média | 🟠 | Ajustar o escopo e organiza-ló | 
+| 10 | Aumento de Escopo (Scope Creep) | Alta | Média | 🟠 | Ajustar o escopo e organiza-ló |
+| 11 | Ataques tipo Worm (Glass Warm) | Médio | Alto | 🟠 | Mantenha o sistema operacional e todos os programas atualizados |
+| 12 | Prazos e Orçamentos Irrealistas | Alta | Média | 🟠 | Sempre checar aos prazos e sempre olhar a data de entrega. |  
