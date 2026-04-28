@@ -1,8 +1,9 @@
-// src/server.js
 require("dotenv").config();
+
 const app = require("./app");
 const { sequelize } = require("./models");
 const PORT = process.env.PORT || 3000;
+
 async function iniciar() {
     try {
         await sequelize.authenticate();
@@ -19,4 +20,5 @@ async function iniciar() {
         process.exit(1);
     }
 }
+
 iniciar();
