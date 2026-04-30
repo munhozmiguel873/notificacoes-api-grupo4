@@ -1,6 +1,6 @@
 const ParticipanteModel = require("../models/ParticipanteModel");
-
 const { NotFoundError, ValidationError } = require("../errors/AppError");
+
 const {
     isRequired,
     isEmail,
@@ -9,14 +9,17 @@ const {
 } = require("../helpers/validators");
 
 
-function listarTodos() {
-    return ParticipanteModel.listarTodos();
+async function listarTodos() {
+    // data = Dados
+    const participantes = await Participante.findAll({
+        order: [['data', 'ASC']]
+    });
+    return participantes;
 }
 
 
-function buscarPorId(id) {
-    // Busque no Model, lance NotFoundError se não encontrar
-    const participante = ParticipanteModel.buscarPorId(id);
+async function buscarPorId(id) {
+    const participante = await Participante.findByPk(id);
     if (!participante) {
         throw new NotFoundError("Participante");
     }
@@ -25,18 +28,16 @@ function buscarPorId(id) {
 
 
 function criar(dados) {
-    const { nome, email } = dados;
-    const erros = validar([
-        // Que validações fazem sentido para Participante?
-        isRequired(nome, "Nome"),
-        isRequired(email, "Email"),
-        minLength(nome, 3, "Nome"),
-        isEmail(email, "Email"),
-    ]);
-    if (erros) {
-        throw new ValidationError(erros.join("; "));
+    try {
+        const novoParticipante = await Participante.create(dados);
+        return novoParticipante;
+    } catch (erro) {
+        if (erro.name === "SequelizeValidationError") {
+            const mensagens = erro.errors.map(e => e.message).join("; ");
+            throw new ValidationError(mensagens);
+        }
+        throw erro; // Re-lance outros erros
     }
-    return ParticipanteModel.criar({ nome, email });
 }
 
 

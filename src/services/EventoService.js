@@ -1,70 +1,43 @@
-// src/services/EventoService.js
-const EventoModel = require("../models/EventoModel");
-const { NotFoundError, ValidationError } = require("../errors/AppError");
-const {
-    isRequired,
-    isPositiveInteger,
-    minLength,
-    validar,
-} = require("../helpers/validators");
-
+const { Evento } = require('../models');
+const { NotFoundError, ValidationError } = require('../errors/AppError');
 
 async function listarTodos() {
-    return await EventoModel.listarTodos();
+    const eventos = await Evento.findAll({
+        order: [['data', 'ASC']],
+    });
+    return eventos;
 }
 
-
 async function buscarPorId(id) {
-    const evento = await EventoModel.buscarPorId(id);
+    const evento = await Evento.findByPk(id);
     if (!evento) {
-        throw new NotFoundError("Evento");
+        throw new NotFoundError('Evento');
     }
     return evento;
 }
 
-
 async function criar(dados) {
-    const { nome, descricao, data, local, capacidade } = dados;
-    // Validação
-    const erros = validar([
-        isRequired(nome, "Nome"),
-        isRequired(data, "Data"),
-        minLength(nome, 3, "Nome"),
-        isPositiveInteger(capacidade, "Capacidade"),
-    ]);
-    if (erros) {
-        throw new ValidationError(erros.join("; "));
+    try {
+        const novoEvento = await Evento.create(dados);
+        return novoEvento;
+    } catch (erro) {
+        // O Sequelize lança SequelizeValidationError para validações do Model
+        if (erro.name === 'SequelizeValidationError') {
+            const mensagens = erro.errors.map(e => e.message).join('; ');
+            throw new ValidationError(mensagens);
+        }
+        throw erro;
     }
-    return await EventoModel.criar({ nome, descricao, data, local, capacidade });
 }
 
-
+// Atualizar e Deletar vamos implementar na próxima aula
 async function atualizar(id, dados) {
-    const { nome, capacidade } = dados;
-    // Validações (campos opcionais no update)
-    const erros = validar([
-        minLength(nome, 3, "Nome"),
-        isPositiveInteger(capacidade, "Capacidade"),
-    ]);
-    if (erros) {
-        throw new ValidationError(erros.join("; "));
-    }
-    const eventoAtualizado = await EventoModel.atualizar(id, dados);
-    if (!eventoAtualizado) {
-        throw new NotFoundError("Evento");
-    }
-    return eventoAtualizado;
+    // TODO: próxima aula
 }
-
 
 async function deletar(id) {
-    const deletado = await EventoModel.deletar(id);
-    if (!deletado) {
-        throw new NotFoundError("Evento");
-    }
-    return true;
+    // TODO: próxima aula
 }
-
 
 module.exports = {
     listarTodos,
@@ -73,3 +46,18 @@ module.exports = {
     atualizar,
     deletar,
 };
+
+/*
+### Entendendo os métodos do Sequelize
+
+| Método | SQL equivalente | Para quê |
+|---|---|---|
+| `Evento.findAll()` | `SELECT * FROM eventos` | Listar todos |
+| `Evento.findByPk(id)` | `SELECT * FROM eventos WHERE id = ?` | Buscar por chave primária |
+| `Evento.create(dados)` | `INSERT INTO eventos (...) VALUES (...)` | Criar novo registro |
+| `Evento.findAll({ order: [...] })` | `SELECT * ... ORDER BY data ASC` | Listar com ordenação |
+
+> 💡 Perceba que **removemos as validações manuais** do Service (isRequired, minLength...). 
+As validações agora ficam no Model do Sequelize (`validate: {...}`). 
+Se os dados forem inválidos, o Sequelize lança `SequelizeValidationError` automaticamente.
+*/
