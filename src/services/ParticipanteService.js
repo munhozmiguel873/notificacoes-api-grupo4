@@ -27,7 +27,7 @@ async function buscarPorId(id) {
 }
 
 
-function criar(dados) {
+async function criar(dados) {
     try {
         const novoParticipante = await Participante.create(dados);
         return novoParticipante;
@@ -41,31 +41,31 @@ function criar(dados) {
 }
 
 
-function atualizar(id, dados) {
-    // Valide (campos opcionais), atualize, lance NotFoundError se necessário
-    const { nome, email } = dados;
-    const erros  = validar([
-        minLength(nome, 3, "Nome"),
-        isEmail(email, "Email"),
-    ]);
-    if (erros) {
-        throw new ValidationError(erros.join("; "));
+async function atualizar(id, dados) {
+    const participante = await Participante.findByPk(id);
+    try {
+        await Participante.update(dados);
+        return participante;
+    } catch (erro) {
+        if (erro.name === "SequelizeValidationError") {
+            const mensagens = erro.errors.map(e => e.message).join("; ");
+            throw new ValidationError(mensagens);
+        }
+        throw erro;
     }
-    const participanteAtualizado = ParticipanteModel.atualizar(id, dados);
-    if (!participanteAtualizado) {
-        throw new NotFoundError("Participante");
-    }
-    return participanteAtualizado;
 }
 
-function deletar(id) {
-    // Delete, lance NotFoundError se não encontrar
-    const deletado = ParticipanteModel.deletar(id);
-    if (!deletado) {
-        throw new NotFoundError("Participante");
-    }
-    return true;
+async function deletar(id) {
+    const participante = await Participante.findByPk(id);
+    await participante.destroy();
+    return { message: 'Participante deletado com sucesso' };
 }
 
 
-module.exports = { listarTodos, buscarPorId, criar, atualizar, deletar };
+module.exports = { 
+    listarTodos, 
+    buscarPorId, 
+    criar, 
+    atualizar, 
+    deletar 
+};
