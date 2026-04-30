@@ -10,9 +10,11 @@ async function listarTodos() {
 
 async function buscarPorId(id) {
     const evento = await Evento.findByPk(id);
+
     if (!evento) {
         throw new NotFoundError('Evento');
     }
+
     return evento;
 }
 
@@ -30,14 +32,18 @@ async function criar(dados) {
     }
 }
 
-// Atualizar e Deletar vamos implementar na próxima aula
 async function atualizar(id, dados) {
     const evento = await Evento.findByPk(id);
+
+    if (!evento) {
+        throw new NotFoundError('Evento');
+    }
+
     try {
-         await Evento.update(dados);
-         return evento;
+        await evento.update(dados);
+        return evento;
     } catch (erro) {
-        if (erro.name === 'SequlizeValidationError') {
+        if (erro.name === 'SequelizeValidationError') {
             const mensagens = erro.errors.map(e => e.message).join('; ');
             throw new ValidationError(mensagens);
         }
@@ -47,8 +53,13 @@ async function atualizar(id, dados) {
 
 async function deletar(id) {
     const evento = await Evento.findByPk(id);
+
+    if (!evento) {
+        throw new NotFoundError('Evento');
+    }
+
     await evento.destroy();
-    return { mensagem: 'Evento deletado com sucesso.'};
+    return true;
 }
 
 module.exports = {

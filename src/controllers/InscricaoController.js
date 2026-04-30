@@ -1,66 +1,48 @@
-const InscricaoModel = require("../models/InscricaoModel");
-const { AppError, NotFoundError, ValidationError } = require("../errors/AppError");
+const InscricaoService = require('../services/InscricaoService');
 
-// POST /inscricoes — criar uma inscrição
-function store(req, res, next) {
+async function store(req, res, next) {
     try {
-        const { eventoId, participanteId } = req.body;
-
-        if (!eventoId || !participanteId) {
-            throw new ValidationError("eventoId e participanteId são obrigatórios");
-        }
-
-        const resultado = InscricaoModel.criar(
-            parseInt(eventoId),
-            parseInt(participanteId),
-        );
-
-        if (resultado.erro) {
-            throw new ValidationError(resultado.erro);
-        }
-
-        res.status(201).json(resultado);
-    } catch (err) {
-        next(err);
+        const novaInscricao = await InscricaoService.criar(req.body);
+        res.status(201).json(novaInscricao);
+    } catch (erro) {
+        next(erro);
     }
+
 }
 
-// GET /inscricoes — listar todas
-function index(req, res, next) {
+async function index(req, res, next) {
     try {
-        const inscricoes = InscricaoModel.listarTodas();
+        const inscricoes = await InscricaoService.listarTodas();
         res.json(inscricoes);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-// GET /inscricoes/evento/:eventoId — listar inscrições de um evento
-function listarPorEvento(req, res, next) {
+// Complete listarPorEvento e cancelar seguindo o mesmo padrão
+
+// listarPorEvento
+async function listarPorEvento(req, res, next) {
     try {
-        const eventoId = parseInt(req.params.eventoId);
-        const inscricoes = InscricaoModel.listarPorEvento(eventoId);
+        const evento = req.params.eventoId;
+        const inscricoes = await InscricaoService.listarPorEvento(evento);
         res.json(inscricoes);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-// PATCH /inscricoes/:id/cancelar — cancelar uma inscrição
-function cancelar(req, res, next) {
+// cancelar
+async function cancelar(req, res, next) {
     try {
-        const id = parseInt(req.params.id);
-        const resultado = InscricaoModel.cancelar(id);
-
-        if (!resultado) {
-            throw new NotFoundError("Inscrição");
-        }
-
-        res.json(resultado);
-    } catch (err) {
-        next(err);
+        const id = req.params.id;
+        await InscricaoService.cancelar(id);
+        res.status(204).send();
+    } catch (erro) {
+        next(erro);
     }
 }
+
 
 module.exports = {
     store,
@@ -68,25 +50,3 @@ module.exports = {
     listarPorEvento,
     cancelar,
 };
-
-function store(req, res, next) {
-    try {
-        const { eventoId, participanteId } = req.body;
-        const erros = validar([
-            // eventoId é obrigatório
-            !eventoId && "eventoId é obrigatório",
-            // participanteId é obrigatório
-            !participanteId && "participanteId é obrigatório",
-        ]);
-        if (erros) {
-            throw new ValidationError(erros.join("; "));
-        }
-        const resultado = InscricaoModel.criar(
-            parseInt(eventoId),
-            parseInt(participanteId),
-        );
-        res.status(201).json(resultado);
-    } catch (erro) {
-        next(erro);
-    }
-}

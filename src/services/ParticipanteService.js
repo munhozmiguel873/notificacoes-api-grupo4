@@ -57,8 +57,11 @@ async function atualizar(id, dados) {
 
 async function deletar(id) {
     const participante = await Participante.findByPk(id);
+    if (!participante) {
+        throw new NotFoundError('Participante');
+    }
     await participante.destroy();
-    return { message: 'Participante deletado com sucesso' };
+    return true;
 }
 
 
