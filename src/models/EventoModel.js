@@ -1,4 +1,3 @@
-// src/models/EventoModel.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
@@ -34,9 +33,13 @@ const Evento = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                min: { args: [1], msg: "Capacidade deve ser pelo menos 1" },
-            },
+                min: { args: [1], msg: "Capacidade deve ser pelo menos 1" }
+            }
         },
+        banner: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
     },
     {
         tableName: "eventos",

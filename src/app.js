@@ -1,6 +1,7 @@
 // src/app.js
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const app = express();
@@ -14,6 +15,8 @@ app.use(cors());
 
 const responseTime = require("./middlewares/responseTime");
 app.use(responseTime);
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 
 // ============================================
@@ -59,6 +62,5 @@ const errorHandler = require("./middlewares/errorHandler");
 
 app.use(notFound);
 app.use(errorHandler);
-
 
 module.exports = app;
