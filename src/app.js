@@ -11,6 +11,7 @@ const app = express();
 // ============================================
 app.use(express.json());
 app.use(cors());
+
 const responseTime = require("./middlewares/responseTime");
 app.use(responseTime);
 
@@ -27,9 +28,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const eventoRoutes = require("./routes/eventoRoutes");
 const participanteRoutes = require("./routes/participanteRoutes");
 const inscricaoRoutes = require("./routes/inscricaoRoutes");
+const exportRoutes = require('./routes/exportRoutes');
+
 app.use("/eventos", eventoRoutes);
 app.use("/participantes", participanteRoutes);
 app.use("/inscricoes", inscricaoRoutes);
+app.use('/exportar', exportRoutes);
 
 // Rota raiz (informativa)
 app.get("/", (req, res) => {
@@ -52,6 +56,7 @@ app.get("/", (req, res) => {
 // ============================================
 const notFound = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/errorHandler");
+
 app.use(notFound);
 app.use(errorHandler);
 

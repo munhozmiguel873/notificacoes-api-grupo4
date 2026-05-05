@@ -9,6 +9,21 @@ async function index(req, res, next) {
   }
 }
 
+async function index(req, res, next) {
+  try {
+    const resultado = await EventoService.listarTodos({
+      pagina: req.query.pagina,
+      porPagina: req.query.porPagina,
+      ordenarPor: req.query.ordenarPor,
+      ordem: req.query.ordem,
+      busca: req.query.busca,
+    });
+    res.json(resultado);
+  } catch (erro) {
+    next(erro);
+  }
+}
+
 async function show(req, res, next) {
   try {
     const id = parseInt(req.params.id);
