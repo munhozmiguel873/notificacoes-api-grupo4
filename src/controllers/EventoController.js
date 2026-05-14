@@ -1,93 +1,89 @@
-const EventoModel = require("../models/EventoModel");
+const EventoService = require('../services/EventoService');
+const cache = require('../config/cache');
 
-function index(req, res, next) {
-    try {
-        const eventos = EventoModel.listarTodos();
-        res.json(eventos);
-    } catch (err) {
-        next(err);
-    }
+async function index(req, res, next) {
+  try {
+    const resultado = await EventoService.listarTodos({
+      pagina: req.query.pagina,
+      porPagina: req.query.porPagina,
+      ordenarPor: req.query.ordenarPor,
+      ordem: req.query.ordem,
+      busca: req.query.busca,
+    });
+
+    res.json(resultado);
+  } catch (erro) {
+    next(erro);
+  }
 }
 
-function show(req, res, next) {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
+async function show(req, res, next) {
+  try {
+    const id = parseInt(req.params.id);
 
-        const evento = EventoModel.buscarPorId(id);
-        if (!evento) {
-            return res.status(404).json({ erro: "Evento não encontrado" });
-        }
+    const evento = await EventoService.buscarPorId(id);
 
-        res.json(evento);
-    } catch (err) {
-        next(err);
-    }
+    res.json(evento);
+  } catch (erro) {
+    next(erro);
+  }
 }
 
-function store(req, res, next) {
-    try {
-        const { nome, descricao, data, local, capacidade } = req.body;
-        if (!nome || !data) {
-            return res.status(400).json({ erro: "Nome e data são obrigatórios" });
-        }
+async function store(req, res, next) {
+  try {
+    const novoEvento = await EventoService.criar(req.body);
 
-        const novoEvento = EventoModel.criar({
-            nome,
-            descricao,
-            data,
-            local,
-            capacidade,
-        });
+    cache.flushAll();
 
-        res.status(201).json(novoEvento);
-    } catch (err) {
-        next(err);
-    }
+    res.status(201).json(novoEvento);
+  } catch (erro) {
+    next(erro);
+  }
 }
 
-function update(req, res, next) {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
+async function update(req, res, next) {
+  try {
+    const id = parseInt(req.params.id);
 
-        const eventoAtualizado = EventoModel.atualizar(id, req.body);
-        if (!eventoAtualizado) {
-            return res.status(404).json({ erro: "Evento não encontrado" });
-        }
+    const eventoAtualizado = await EventoService.atualizar(id, req.body);
 
-        res.json(eventoAtualizado);
-    } catch (err) {
-        next(err);
-    }
+    cache.flushAll();
+
+    res.json(eventoAtualizado);
+  } catch (erro) {
+    next(erro);
+  }
 }
 
-function destroy(req, res, next) {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
+async function destroy(req, res, next) {
+  try {
+    const id = parseInt(req.params.id);
 
-        const deletado = EventoModel.deletar(id);
-        if (!deletado) {
-            return res.status(404).json({ erro: "Evento não encontrado" });
-        }
+    await EventoService.deletar(id);
 
-        res.status(204).send();
-    } catch (err) {
-        next(err);
-    }
+    cache.flushAll();
+
+    res.status(204).send();
+  } catch (erro) {
+    next(erro);
+  }
+}
+
+async function listarFuturos(req, res, next) {
+  try {
+    const eventos = await EventoService.listarFuturos();
+
+    res.json(eventos);
+  } catch (erro) {
+    next(erro);
+  }
 }
 
 module.exports = {
-    index,
-    show,
-    store,
-    update,
-    destroy,
+  index,
+  show,
+  store,
+  update,
+  destroy,
+  listarFuturos,
 };

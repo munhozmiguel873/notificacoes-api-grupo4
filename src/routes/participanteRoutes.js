@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
 const ParticipanteController = require("../controllers/ParticipanteController");
+
 
 /**
  * @swagger
@@ -25,17 +25,18 @@ const ParticipanteController = require("../controllers/ParticipanteController");
  *       example:
  *         id: 1
  *         nome: Ana Silva
- *         email: ana@email.com
+ *         email: ana@gmail.com
  */
 
 /**
  * @swagger
  * /participantes:
  *   get:
- *     summary: Listar participantes
- *     tags: [Participantes]
+ *     summary: Listar todos os participantes
+ *     tags:
+ *       - Participantes
  *     responses:
- *       200:
+ *       '200':
  *         description: Lista de participantes
  *         content:
  *           application/json:
@@ -46,36 +47,41 @@ const ParticipanteController = require("../controllers/ParticipanteController");
  */
 router.get("/", ParticipanteController.index);
 
+
 /**
  * @swagger
  * /participantes/{id}:
  *   get:
  *     summary: Buscar participante por ID
- *     tags: [Participantes]
+ *     tags:
+ *       - Participantes
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
+ *         description: ID do participante
  *     responses:
- *       200:
+ *       '200':
  *         description: Participante encontrado
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Participante'
- *       404:
+ *       '404':
  *         description: Participante não encontrado
  */
 router.get("/:id", ParticipanteController.show);
+
 
 /**
  * @swagger
  * /participantes:
  *   post:
- *     summary: Criar participante
- *     tags: [Participantes]
+ *     summary: Inscrever-se
+ *     tags:
+ *       - Participantes
  *     requestBody:
  *       required: true
  *       content:
@@ -90,20 +96,25 @@ router.get("/:id", ParticipanteController.show);
  *                 type: string
  *               email:
  *                 type: string
+ *           example:
+ *             nome: Pedro Augusto
+ *             email: pedroa@gmail.com
  *     responses:
- *       201:
- *         description: Participante criado com sucesso
- *       400:
+ *       '201':
+ *         description: Se inscreveu com sucesso
+ *       '400':
  *         description: Dados inválidos
  */
 router.post("/", ParticipanteController.store);
+
 
 /**
  * @swagger
  * /participantes/{id}:
  *   put:
- *     summary: Atualizar participante
- *     tags: [Participantes]
+ *     summary: Atualizar um participante
+ *     tags:
+ *       - Participantes
  *     parameters:
  *       - in: path
  *         name: id
@@ -122,19 +133,21 @@ router.post("/", ParticipanteController.store);
  *               email:
  *                 type: string
  *     responses:
- *       200:
+ *       '200':
  *         description: Participante atualizado
- *       404:
+ *       '404':
  *         description: Participante não encontrado
  */
 router.put("/:id", ParticipanteController.update);
+
 
 /**
  * @swagger
  * /participantes/{id}:
  *   delete:
- *     summary: Deletar participante
- *     tags: [Participantes]
+ *     summary: Deletar um participante
+ *     tags:
+ *       - Participantes
  *     parameters:
  *       - in: path
  *         name: id
@@ -142,9 +155,9 @@ router.put("/:id", ParticipanteController.update);
  *         schema:
  *           type: integer
  *     responses:
- *       204:
+ *       '204':
  *         description: Participante deletado
- *       404:
+ *       '404':
  *         description: Participante não encontrado
  */
 router.delete("/:id", ParticipanteController.destroy);

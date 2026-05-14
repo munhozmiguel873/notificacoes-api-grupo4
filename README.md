@@ -1,58 +1,49 @@
-# 🔔 Notificações API
+# Notificações API
 
-API REST para gerenciar eventos, participantes e inscrições em um módulo de notificações.
+API para módulo de notificações por e-mail de uma plataforma de eventos.
 
-## 📋 Sobre o Projeto
+## Como rodar
 
-Este projeto faz parte da Situação de Aprendizagem do curso de Programação Back-End do SENAI.
-A API controla eventos, participantes e inscrições em memória e expõe documentação via Swagger.
+1. Clone o repositório
+2. Execute o `npm install`
+3. Execute o `npm start`
+4. Acesse `http://localhost:3000`
 
-## 🔧 Requisitos
+## Tecnologias
 
-- Node.js 18+ instalada
+- Node.js
+- Express.js
+- Swagger (swagger-jsdoc + swagger-ui-express)
+- Dotenv (variáveis de ambiente)
+- Nodemon (desenvolvimento)
+- CORS
 
-## 🚀 Como Rodar
+## 📁 Estrutura do Projeto
 
-1. Clone o repositório:
-```bash
-git clone https://github.com/SEU-USUARIO/notificacoes-api.git
-cd notificacoes-api
-```
-2. Instale as dependências:
-```bash
-npm install
-```
-3. Inicie o servidor:
-```bash
-npm start
-```
-4. Abra no navegador:
-- API: http://localhost:3000
-- Swagger: http://localhost:3000/api-docs
+src/
+├── controllers/ → Recebe requisições, retorna respostas
+├── services/ → Lógica de negócio e validações
+├── models/ → Acesso e manipulação de dados
+├── routes/ → Mapeamento de URLs
+├── middlewares/ → Funções intermediárias (log, erros, CORS)
+├── errors/ → Classes de erro customizadas
+├── helpers/ → Funções auxiliares (validação, etc.)
+├── swagger.js → Configuração da documentação
+├── app.js → Configuração do Express
+└── server.js → Inicialização do servidor
 
-## 📌 Endpoints
+## 🔧 Scripts
+| Comando | Descrição |
+|---------|-----------|
+| `npm start` | Inicia o servidor (produção) |
+| `npm run dev` | Inicia com Nodemon (desenvolvimento) |
+| `npm run db:migrate` | Executa migrations pendentes |
+| `npm run db:migrate:undo` | Desfaz última migration |
+| `npm run db:seed` | Insere dados iniciais |
+| `npm run db:reset` | Recria banco completo |
 
-### Eventos
-- `GET /eventos`
-- `GET /eventos/:id`
-- `POST /eventos`
-- `PUT /eventos/:id`
-- `DELETE /eventos/:id`
+## 🗄️ Banco de Dados
 
-### Participantes
-- `GET /participantes`
-- `GET /participantes/:id`
-- `POST /participantes`
-- `PUT /participantes/:id`
-- `DELETE /participantes/:id`
-
-### Inscrições
-- `GET /inscricoes`
-- `GET /inscricoes/evento/:eventoId`
-- `POST /inscricoes`
-- `PATCH /inscricoes/:id/cancelar`
-
-## 📝 Observações
-
-- Os dados são armazenados em memória. Ao reiniciar o servidor, as inscrições, eventos e participantes serão reinicializados.
-- A documentação Swagger é gerada a partir dos comentários nas rotas em `src/routes/`.
+- **SGBD:** MySQL
+- **ORM:** Sequelize
+- **Tabelas:** eventos, participantes, inscricoes, notificacoes

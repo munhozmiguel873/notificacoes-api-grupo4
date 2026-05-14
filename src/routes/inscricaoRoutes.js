@@ -1,3 +1,4 @@
+// src/routes/inscricaoRoutes.js
 const express = require("express");
 const router = express.Router();
 
@@ -5,35 +6,9 @@ const InscricaoController = require("../controllers/InscricaoController");
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     Inscricao:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         eventoId:
- *           type: integer
- *         participanteId:
- *           type: integer
- *         dataInscricao:
- *           type: string
- *         status:
- *           type: string
- *           enum: [confirmada, cancelada]
- *       example:
- *         id: 1
- *         eventoId: 1
- *         participanteId: 1
- *         dataInscricao: "2025-08-01T10:30:00.000Z"
- *         status: confirmada
- */
-
-/**
- * @swagger
  * /inscricoes:
  *   post:
- *     summary: Criar uma inscrição
+ *     summary: Criar uma nova inscrição
  *     tags: [Inscrições]
  *     requestBody:
  *       required: true
@@ -47,13 +22,20 @@ const InscricaoController = require("../controllers/InscricaoController");
  *             properties:
  *               eventoId:
  *                 type: integer
+ *                 description: ID do evento
  *               participanteId:
  *                 type: integer
+ *                 description: ID do participante
+ *           example:
+ *             eventoId: 1
+ *             participanteId: 2
  *     responses:
  *       201:
- *         description: Inscrição criada
+ *         description: Inscrição criada com sucesso
  *       400:
- *         description: Dados inválidos
+ *         description: Dados inválidos ou inscrição duplicada
+ *       404:
+ *         description: Evento ou participante não encontrado
  */
 router.post("/", InscricaoController.store);
 
@@ -66,12 +48,6 @@ router.post("/", InscricaoController.store);
  *     responses:
  *       200:
  *         description: Lista de inscrições
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Inscricao'
  */
 router.get("/", InscricaoController.index);
 
@@ -79,7 +55,7 @@ router.get("/", InscricaoController.index);
  * @swagger
  * /inscricoes/evento/{eventoId}:
  *   get:
- *     summary: Listar inscrições por evento
+ *     summary: Listar inscrições de um evento
  *     tags: [Inscrições]
  *     parameters:
  *       - in: path
@@ -87,11 +63,31 @@ router.get("/", InscricaoController.index);
  *         required: true
  *         schema:
  *           type: integer
+ *         description: ID do evento
  *     responses:
  *       200:
- *         description: Lista de inscrições do evento
+ *         description: Inscrições do evento
  */
 router.get("/evento/:eventoId", InscricaoController.listarPorEvento);
+
+/**
+ * @swagger
+ * /inscricoes/eventos/{eventoId}:
+ *   get:
+ *     summary: Listar inscrições de um evento (rota alternativa)
+ *     tags: [Inscrições]
+ *     parameters:
+ *       - in: path
+ *         name: eventoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do evento
+ *     responses:
+ *       200:
+ *         description: Inscrições do evento
+ */
+router.get("/eventos/:eventoId", InscricaoController.listarPorEvento);
 
 /**
  * @swagger
@@ -105,8 +101,9 @@ router.get("/evento/:eventoId", InscricaoController.listarPorEvento);
  *         required: true
  *         schema:
  *           type: integer
+ *         description: ID da inscrição
  *     responses:
- *       200:
+ *       204:
  *         description: Inscrição cancelada
  *       404:
  *         description: Inscrição não encontrada
@@ -114,25 +111,3 @@ router.get("/evento/:eventoId", InscricaoController.listarPorEvento);
 router.patch("/:id/cancelar", InscricaoController.cancelar);
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

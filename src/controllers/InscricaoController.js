@@ -1,69 +1,48 @@
-const InscricaoModel = require("../models/InscricaoModel");
+const InscricaoService = require('../services/InscricaoService');
 
-function store(req, res, next) {
+async function store(req, res, next) {
     try {
-        const { eventoId, participanteId } = req.body;
-        if (!eventoId || !participanteId) {
-            return res
-                .status(400)
-                .json({ erro: "eventoId e participanteId são obrigatórios" });
-        }
-
-        const resultado = InscricaoModel.criar(
-            parseInt(eventoId, 10),
-            parseInt(participanteId, 10),
-        );
-
-        if (resultado.erro) {
-            return res.status(400).json(resultado);
-        }
-
-        res.status(201).json(resultado);
-    } catch (err) {
-        next(err);
+        const novaInscricao = await InscricaoService.criar(req.body);
+        res.status(201).json(novaInscricao);
+    } catch (erro) {
+        next(erro);
     }
+
 }
 
-function index(req, res, next) {
+async function index(req, res, next) {
     try {
-        const inscricoes = InscricaoModel.listarTodos();
+        const inscricoes = await InscricaoService.listarTodas();
         res.json(inscricoes);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-function listarPorEvento(req, res, next) {
-    try {
-        const eventoId = parseInt(req.params.eventoId, 10);
-        if (Number.isNaN(eventoId)) {
-            return res.status(400).json({ erro: "eventoId inválido" });
-        }
+// Complete listarPorEvento e cancelar seguindo o mesmo padrão
 
-        const inscricoes = InscricaoModel.listarPorEvento(eventoId);
+// listarPorEvento
+async function listarPorEvento(req, res, next) {
+    try {
+        const evento = req.params.eventoId;
+        const inscricoes = await InscricaoService.listarPorEvento(evento);
         res.json(inscricoes);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-function cancelar(req, res, next) {
+// cancelar
+async function cancelar(req, res, next) {
     try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
-
-        const resultado = InscricaoModel.cancelar(id);
-        if (!resultado) {
-            return res.status(404).json({ erro: "Inscrição não encontrada" });
-        }
-
-        res.json(resultado);
-    } catch (err) {
-        next(err);
+        const id = req.params.id;
+        await InscricaoService.cancelar(id);
+        res.status(204).send();
+    } catch (erro) {
+        next(erro);
     }
 }
+
 
 module.exports = {
     store,

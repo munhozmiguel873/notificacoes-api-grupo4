@@ -1,92 +1,73 @@
-const ParticipanteModel = require("../models/ParticipanteModel");
+const ParticipanteService = require("../services/ParticipanteService");
 
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+const parseId = require("../helpers/parseId");
 
-function index(req, res, next) {
+// GET
+async function index(req, res, next) {
     try {
-        const participantes = ParticipanteModel.listarTodos();
+        const participantes = await ParticipanteService.listarTodos();
+
         res.json(participantes);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-function show(req, res, next) {
+// GET BY ID
+async function show(req, res, next) {
     try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
+        const id = parseInt(req.params.id);
 
-        const participante = ParticipanteModel.buscarPorId(id);
-        if (!participante) {
-            return res.status(404).json({ erro: "Participante não encontrado" });
-        }
+        const participante = await ParticipanteService.buscarPorId(id);
 
         res.json(participante);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-function store(req, res, next) {
+// POST
+async function store(req, res, next) {
     try {
-        const { nome, email } = req.body;
-        if (!nome || !email) {
-            return res.status(400).json({ erro: "Nome e email são obrigatórios" });
-        }
-        if (!isValidEmail(email)) {
-            return res.status(400).json({ erro: "Email inválido" });
-        }
+        const novoParticipante = await ParticipanteService.criar(req.body);
 
-        const novoParticipante = ParticipanteModel.criar({ nome, email });
         res.status(201).json(novoParticipante);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-function update(req, res, next) {
+// PUT
+async function update(req, res, next) {
     try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
+        const id = parseInt(req.params.id);
 
-        const { nome, email } = req.body;
-        if (email && !isValidEmail(email)) {
-            return res.status(400).json({ erro: "Email inválido" });
-        }
-
-        const participanteAtualizado = ParticipanteModel.atualizar(id, req.body);
-        if (!participanteAtualizado) {
-            return res.status(404).json({ erro: "Participante não encontrado" });
-        }
+        const participanteAtualizado =
+            await ParticipanteService.atualizar(id, req.body);
 
         res.json(participanteAtualizado);
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-function destroy(req, res, next) {
+// DELETE
+async function destroy(req, res, next) {
     try {
-        const id = parseInt(req.params.id, 10);
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ erro: "ID inválido" });
-        }
+        const id = parseInt(req.params.id);
 
-        const deletado = ParticipanteModel.deletar(id);
-        if (!deletado) {
-            return res.status(404).json({ erro: "Participante não encontrado" });
-        }
+        await ParticipanteService.deletar(id);
 
         res.status(204).send();
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 }
 
-module.exports = { index, show, store, update, destroy };
+module.exports = {
+    index,
+    show,
+    store,
+    update,
+    destroy,
+};

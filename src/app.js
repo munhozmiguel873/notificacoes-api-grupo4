@@ -1,46 +1,68 @@
 // src/app.js
+const express = require("express");
+const cors = require("cors");
+const path = require('path');
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
-const express = require("express");
 const app = express();
 
-// Middleware para ler JSON no body
-app.use(express.json());
 
-// Documentação Swagger
+// ============================================
+// MIDDLEWARES GLOBAIS
+// ============================================
+app.use(express.json());
+app.use(cors());
+
+const responseTime = require("./middlewares/responseTime");
+app.use(responseTime);
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+
+// ============================================
+// DOCUMENTAÇÃO
+// ============================================
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Importar rotas
+
+// ============================================
+// ROTAS
+// ============================================
 const eventoRoutes = require("./routes/eventoRoutes");
 const participanteRoutes = require("./routes/participanteRoutes");
 const inscricaoRoutes = require("./routes/inscricaoRoutes");
+const exportRoutes = require('./routes/exportRoutes');
+const notificacaoRoutes = require('./routes/notificacaoRoutes');
 
-// Usar rotas com prefixo
 app.use("/eventos", eventoRoutes);
 app.use("/participantes", participanteRoutes);
 app.use("/inscricoes", inscricaoRoutes);
+app.use('/exportar', exportRoutes);
+app.use('/notificacoes', notificacaoRoutes);
+
 
 // Rota raiz (informativa)
 app.get("/", (req, res) => {
     res.json({
         mensagem: "API de Notificações",
+        versao: "1.0.0",
+        documentacao: "/api-docs",
         rotas: {
-            eventos: '/eventos',
-            participantes: '/participantes',
-            inscricoes: '/inscricoes'
+            eventos: "/eventos",
+            participantes: "/participantes",
+            inscricoes: "/inscricoes",
+
         },
     });
 });
 
-app.use((req, res) => {
-    res.status(404).json({ erro: "Rota não encontrada" });
-});
+// ============================================
+// MIDDLEWARES DE ERRO (sempre por último!)
+// ============================================
+const notFound = require("./middlewares/notFound");
+const errorHandler = require("./middlewares/errorHandler");
 
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(err.status || 500).json({
-        erro: err.message || "Erro interno do servidor",
-    });
-});
+app.use(notFound);
+app.use(errorHandler);
 
 module.exports = app;

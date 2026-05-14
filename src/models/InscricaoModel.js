@@ -1,52 +1,32 @@
-const EventoModel = require("./EventoModel");
-const ParticipanteModel = require("./ParticipanteModel");
-let inscricoes = [];
-let proximoId = 1;
+/// src/models/InscricaoModel.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
 
-function criar(eventoId, participanteId) {
-    const evento = EventoModel.buscarPorId(eventoId);
-    if (!evento) return { erro: "Evento não encontrado" };
+const Inscricao = sequelize.define(
+    "Inscricao",
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        dataInscricao: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+            field: "data_inscricao",
+        },
+        status: {
+            type: DataTypes.ENUM("confirmada", "cancelada"),
+            allowNull: false,
+            defaultValue: "confirmada",
+        },
+    },
+    {
+        tableName: "inscricoes",
+        timestamps: true,
+        underscored: true,
+    }
+);
 
-    const participante = ParticipanteModel.buscarPorId(participanteId);
-    if (!participante) return { erro: "Participante não encontrado" };
-
-    const jaInscrito = inscricoes.find(
-        (i) => i.eventoId === eventoId && i.participanteId === participanteId,
-    );
-    if (jaInscrito) return { erro: "Participante já inscrito neste evento" };
-
-    const novaInscricao = {
-        id: proximoId,
-        eventoId,
-        participanteId,
-        dataInscricao: new Date().toISOString(),
-        status: "confirmada",
-    };
-
-    proximoId++;
-    inscricoes.push(novaInscricao);
-    return novaInscricao;
-}
-
-function listarTodos() {
-    return inscricoes;
-}
-
-function listarPorEvento(eventoId) {
-    return inscricoes.filter((i) => i.eventoId === eventoId);
-}
-
-function cancelar(id) {
-    const index = inscricoes.findIndex((i) => i.id === id);
-    if (index === -1) return null;
-
-    inscricoes[index].status = "cancelada";
-    return inscricoes[index];
-}
-
-module.exports = {
-    criar,
-    listarTodos,
-    listarPorEvento,
-    cancelar,
-};
+module.exports = Inscricao;
