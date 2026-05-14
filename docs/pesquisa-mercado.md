@@ -1,12 +1,12 @@
 # Pesquisa de Mercado — Serviços de Notificação
 
 ## Serviços de E-mail Transacional
-| Serviço | Plano Gratuito | Preço Inicial | Diferenciais |
-| --- | --- | --- | --- |
-| SendGrid | 100 emails/dia | US$ 15/mês | API robusta, templates |
-| Mailgun | 5.000/mês (3 meses) | US$ 35/mês | Foco em devs |
+|   Serviço  |      Plano Gratuito      | Preço Inicial | Diferenciais |
+| ---------- | ------------------------ | ------------- | --- |
+| SendGrid   | 100 emails/dia           | US$ 15/mês | API robusta, templates |
+| Mailgun    | 5.000/mês (3 meses)      | US$ 35/mês | Foco em devs |
 | Amazon SES | 62.000/mês (se usar EC2) | US$ 0.10/1000 | Escala, preço |
-| Mailtrap | 500/mês (teste) | US$ 15/mês | Sandbox para testes |
+| Mailtrap   | 500/mês (teste)          | US$ 15/mês | Sandbox para testes |
 
 ## Como o nosso projeto se compara?
 - Nosso projeto implementa uma API de notificações back-end que gerencia eventos, participantes e inscrições.

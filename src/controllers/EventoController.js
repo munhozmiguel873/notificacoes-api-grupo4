@@ -1,57 +1,87 @@
-// src/controllers/EventoController.js
 const EventoModel = require("../models/EventoModel");
 
-// GET /eventos — listar todos
-function index(req, res) {
-    const eventos = EventoModel.listarTodos();
-    res.json(eventos);
+function index(req, res, next) {
+    try {
+        const eventos = EventoModel.listarTodos();
+        res.json(eventos);
+    } catch (err) {
+        next(err);
+    }
 }
 
-// GET /eventos/:id — buscar por ID
-function show(req, res) {
-    const id = parseInt(req.params.id);
-    const evento = EventoModel.buscarPorId(id);
-    if (!evento) {
-        return res.status(404).json({ erro: "Evento não encontrado" });
+function show(req, res, next) {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (Number.isNaN(id)) {
+            return res.status(400).json({ erro: "ID inválido" });
+        }
+
+        const evento = EventoModel.buscarPorId(id);
+        if (!evento) {
+            return res.status(404).json({ erro: "Evento não encontrado" });
+        }
+
+        res.json(evento);
+    } catch (err) {
+        next(err);
     }
-    res.json(evento);
 }
 
-// POST /eventos — criar novo
-function store(req, res) {
-    const { nome, descricao, data, local, capacidade } = req.body;
-    // Validação simples
-    if (!nome || !data) {
-        return res.status(400).json({ erro: "Nome e data são obrigatórios" });
+function store(req, res, next) {
+    try {
+        const { nome, descricao, data, local, capacidade } = req.body;
+        if (!nome || !data) {
+            return res.status(400).json({ erro: "Nome e data são obrigatórios" });
+        }
+
+        const novoEvento = EventoModel.criar({
+            nome,
+            descricao,
+            data,
+            local,
+            capacidade,
+        });
+
+        res.status(201).json(novoEvento);
+    } catch (err) {
+        next(err);
     }
-    const novoEvento = EventoModel.criar({
-        nome,
-        descricao,
-        data,
-        local,
-        capacidade,
-    });
-    res.status(201).json(novoEvento);
 }
 
-// PUT /eventos/:id — atualizar
-function update(req, res) {
-    const id = parseInt(req.params.id);
-    const eventoAtualizado = EventoModel.atualizar(id, req.body);
-    if (!eventoAtualizado) {
-        return res.status(404).json({ erro: "Evento não encontrado" });
+function update(req, res, next) {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (Number.isNaN(id)) {
+            return res.status(400).json({ erro: "ID inválido" });
+        }
+
+        const eventoAtualizado = EventoModel.atualizar(id, req.body);
+        if (!eventoAtualizado) {
+            return res.status(404).json({ erro: "Evento não encontrado" });
+        }
+
+        res.json(eventoAtualizado);
+    } catch (err) {
+        next(err);
     }
-    res.json(eventoAtualizado);
 }
 
-// DELETE /eventos/:id — deletar
-function destroy(req, res) {
-    const id = parseInt(req.params.id);
-    const deletado = EventoModel.deletar(id);
-    if (!deletado) {
-        return res.status(404).json({ erro: "Evento não encontrado" });
+function destroy(req, res, next) {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (Number.isNaN(id)) {
+            return res.status(400).json({ erro: "ID inválido" });
+        }
+
+        const deletado = EventoModel.deletar(id);
+        if (!deletado) {
+            return res.status(404).json({ erro: "Evento não encontrado" });
+        }
+
+        res.status(204).send();
+    } catch (err) {
+        next(err);
     }
-    res.status(204).send();
 }
 
 module.exports = {

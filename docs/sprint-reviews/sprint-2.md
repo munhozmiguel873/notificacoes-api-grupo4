@@ -1,5 +1,5 @@
 # Sprint Review — Sprint 1
-**Período:** 23/04/2026 a 14/05/2026
+**Período:** 11/05/2026 a 14/05/2026
 
 **Participantes:** 
 - Miguel Munhoz N°24
@@ -10,19 +10,29 @@
 - [Lista de cards que entraram na sprint]
 
 ## O que foi entregue
-- ✅
+- ✅ CRUD de Eventos funcionando
+- ✅ CRUD de Participantes funcionando
+- ✅ CRUD de Inscrições funcionando
+- ✅ Documentação das rotas principais no Swagger
+- ✅ Validações básicas adicionadas em rotas POST/PUT
+- ✅ Estrutura do projeto organizada em MVC
+- ✅ Semana 5
+- ✅ Semana 6
+- ✅ Semana 7
+- ✅ Semana 8
+- ✅ Semana 9
 
 ## O que ficou pendente
-- [Cards não concluídos e por quê]
+- Nada está pendente.
 
 ## Métricas
-- Cards planejados: X
-- Cards concluídos: Y
-- Taxa de conclusão: Y/X = Z%
-- Commits por membro: [Membro 1]: N, [Membro 2]: N, [Membro 3]: N
+- Cards planejados: 11
+- Cards concluídos: 11
+- Taxa de conclusão: 11/11 = 100%
+- Commits por membro: Miguel Munhoz - 100
 
 ## Impedimentos encontrados
-- [O que atrasou ou bloqueou o trabalho]
+- Não ocorreu nenhum impedimento até o momento
 
 ## Lições aprendidas
-- [O que funcionou bem, o que melhorar]
+- O trabalho em equipe.

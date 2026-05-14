@@ -32,4 +32,15 @@ app.get("/", (req, res) => {
     });
 });
 
+app.use((req, res) => {
+    res.status(404).json({ erro: "Rota não encontrada" });
+});
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(err.status || 500).json({
+        erro: err.message || "Erro interno do servidor",
+    });
+});
+
 module.exports = app;

@@ -1,6 +1,6 @@
 # Auditoria de Qualidade — Sprint 2
-**Data:** [data]
-**Revisores:** [quem revisou o que]
+**Data:** 2026-05-14
+**Revisores:** Equipe de desenvolvimento
 
 ## Checklist de Qualidade
 ### Organização
@@ -9,18 +9,18 @@
 - [ ] Nomes de variáveis e funções são claros e consistentes
 
 ### Tratamento de Erros
-- [ ] Todos os controllers usam try/catch + next(erro)
-- [ ] Erros retornam formato padronizado
+- [x] Todos os controllers usam try/catch + next(erro)
+- [x] Erros retornam formato padronizado
 - [ ] Erros do Sequelize são tratados no errorHandler
 
 ### Validações
-- [ ] Todas as rotas POST/PUT têm validação
-- [ ] E-mails são validados
-- [ ] IDs são parseados corretamente
+- [x] Todas as rotas POST/PUT têm validação
+- [x] E-mails são validados
+- [x] IDs são parseados corretamente
 
 ### Documentação
-- [ ] Swagger cobre todas as rotas atuais
-- [ ] README está atualizado
+- [x] Swagger cobre todas as rotas atuais
+- [x] README está atualizado
 - [ ] .env.example tem todas as variáveis
 
 ### Git
@@ -28,8 +28,11 @@
 - [ ] Mensagens de commit são descritivas
 - [ ] .gitignore está correto
 
-## Dívidas Técnicas Encontradas
-| # | Descrição | Arquivo | Prioridade | Responsável |
-| --- | --- | --- | --- | --- |
-| 1 | [ex: validação de data incompleta] | [arquivo] | Alta | [membro] |
-| 2 | | | | |
+Dívidas Técnicas Encontradas
+#	Descrição	Arquivo	Prioridade	Responsável
+1	Validação de datas incompleta em criação de notificações	src/validators/notificacaoValidator.js	Alta	[membro]
+2	ErrorHandler não trata erros específicos do Sequelize	src/middlewares/errorHandler.js	Alta	[membro]
+3	Falta padronização de imports em alguns controllers	src/controllers/	Média	[membro]
+4	Variáveis de ambiente ausentes no .env.example	.env.example	Média	[membro]
+5	Estrutura MVC inconsistente em alguns módulos	src/modules/	Média	[membro]
+6	Alguns commits possuem mensagens genéricas
