@@ -1,95 +1,140 @@
 # Documentação de Arquitetura — API de Notificações
 
 ## 1. Visão Geral
-A API de Notificações é um módulo back-end REST responsável por gerenciar o envio de notificações por e-mail para participantes de eventos em uma plataforma de eventos.
+
+A API de Notificações é um módulo back-end REST responsável pelo gerenciamento de notificações relacionadas a eventos. O sistema permite o cadastro de eventos, participantes e inscrições, além da organização das informações necessárias para futuros envios de notificações por e-mail.
+
+---
 
 ## 2. Arquitetura de Software
-Cliente (Postman/Navegador)
-│
-▼
-[Middleware Express] → express.json + tratamento de erros
-│
-▼
-[Routes] → Define endpoints HTTP e chama controllers
-│
-▼
-[Controllers] → Recebe request, valida parâmetros, retorna resposta HTTP
-│
-▼
-[Models em memória] → Valores mantidos em arrays no servidor
 
-### Observações
-- O projeto não usa banco de dados no estado atual.
-- Dados em memória são perdidos ao reiniciar o servidor.
-- A documentação da API é gerada pelo Swagger a partir dos comentários em `src/routes/`.
+```text
+Cliente (Postman/Navegador)
+        │
+        ▼
+[ Middleware Express ]
+(express.json + tratamento de erros)
+        │
+        ▼
+[ Routes ]
+Define endpoints HTTP e direciona requisições
+        │
+        ▼
+[ Controllers ]
+Recebe requests, valida parâmetros e retorna respostas HTTP
+        │
+        ▼
+[ Models em memória ]
+Dados armazenados temporariamente em arrays no servidor
+```
+
+### 📌 Observações
+
+* O projeto utiliza arquitetura baseada em MVC.
+* Atualmente não há integração com banco de dados.
+* Os dados são mantidos apenas em memória e são perdidos ao reiniciar o servidor.
+* A documentação da API é gerada automaticamente pelo Swagger utilizando comentários nas rotas.
+
+---
 
 ## 3. Entidades e Relacionamentos
-|   Entidade   |             Tabela                |               Descrição                  |
-| ------------ | --------------------------------- | ---------------------------------------- |
-| Evento       | `src/models/EventoModel.js`       | Evento disponível para inscrição         |
-| Participante | `src/models/ParticipanteModel.js` | Usuário que pode se inscrever em eventos |
-| Inscrição    | `src/models/InscricaoModel.js`    | Ligação entre participante e evento      |
 
-### Relacionamentos
-- Evento 1 → N Inscrições
-- Participante 1 → N Inscrições
+| Entidade     | Arquivo                           | Descrição                           |
+| ------------ | --------------------------------- | ----------------------------------- |
+| Evento       | `src/models/EventoModel.js`       | Evento disponível para inscrição    |
+| Participante | `src/models/ParticipanteModel.js` | Usuário que participa dos eventos   |
+| Inscrição    | `src/models/InscricaoModel.js`    | Relação entre participante e evento |
 
-### Eventos
-| Método |        Rota         |     Descrição     |
-| ------ | ------------------- | ----------------- |
-| GET    | /eventos            | Listar (paginado) |
-| GET    | /eventos/:id        | Buscar por ID     |
-| POST   | /eventos            | Criar             |
-| PUT    | /eventos/:id        | Atualizar         |
-| DELETE | /eventos/:id        | Deletar           |
-| POST   | /eventos/:id/banner | Upload de imagem  |
+### 🔗 Relacionamentos
 
-### Participantes
-| Método |       Rota         |   Descrição   |
-| ------ | ------------------ | ------------- |
-| GET    | /participantes     | Listar        |
-| GET    | /participantes/:id | Buscar por ID |
-| POST   | /participantes     | Criar         |
-| PUT    | /participantes/:id | Atualizar     |
-| DELETE | /participantes/:id | Deletar       |
+* Um Evento pode possuir várias Inscrições
+* Um Participante pode possuir várias Inscrições
 
-### Inscrições
-| Método |      Rota       |   Descrição   |
-| ------ | --------------- | ------------- |
-| GET    | /inscricoes     | Listar        |
-| GET    | /inscricoes/:id | Buscar por ID |
-| POST   | /inscricoes     | Criar         |
-| PUT    | /inscricoes/:id | Atualizar     |
-| DELETE | /inscricoes/:id | Deletar       |
+```text
+Evento 1 ─── N Inscrições
+Participante 1 ─── N Inscrições
+```
 
-## 5. Tecnologias
-|     Tecnologia     |                    Justificativa                     |
-| ------------------ | ---------------------------------------------------- |
-| Node.js            | Plataforma de execução do servidor                   |
-| Express.js         | Framework HTTP leve e flexível                       |
-| swagger-jsdoc      | Documentação OpenAPI gerada a partir dos comentários |
-| swagger-ui-express | Interface web de documentação                        |
+---
+
+## 4. Endpoints da API
+
+### 🎫 Eventos
+
+| Método | Rota                  | Descrição            |
+| ------ | --------------------- | -------------------- |
+| GET    | `/eventos`            | Listar eventos       |
+| GET    | `/eventos/:id`        | Buscar evento por ID |
+| POST   | `/eventos`            | Criar evento         |
+| PUT    | `/eventos/:id`        | Atualizar evento     |
+| DELETE | `/eventos/:id`        | Remover evento       |
+| POST   | `/eventos/:id/banner` | Upload de banner     |
+
+---
+
+### 👥 Participantes
+
+| Método | Rota                 | Descrição                  |
+| ------ | -------------------- | -------------------------- |
+| GET    | `/participantes`     | Listar participantes       |
+| GET    | `/participantes/:id` | Buscar participante por ID |
+| POST   | `/participantes`     | Criar participante         |
+| PUT    | `/participantes/:id` | Atualizar participante     |
+| DELETE | `/participantes/:id` | Remover participante       |
+
+---
+
+### 📝 Inscrições
+
+| Método | Rota              | Descrição               |
+| ------ | ----------------- | ----------------------- |
+| GET    | `/inscricoes`     | Listar inscrições       |
+| GET    | `/inscricoes/:id` | Buscar inscrição por ID |
+| POST   | `/inscricoes`     | Criar inscrição         |
+| PUT    | `/inscricoes/:id` | Atualizar inscrição     |
+| DELETE | `/inscricoes/:id` | Remover inscrição       |
+
+---
+
+## 5. Tecnologias Utilizadas
+
+| Tecnologia         | Finalidade                                 |
+| ------------------ | ------------------------------------------ |
+| Node.js            | Ambiente de execução JavaScript            |
+| Express.js         | Framework para criação da API              |
+| swagger-jsdoc      | Geração automática da documentação OpenAPI |
+| swagger-ui-express | Interface visual da documentação Swagger   |
+
+---
 
 ## 6. Estrutura de Pastas
-```
+
+```text
 docs/
-  arquitetura.md
-  definition-of-done.md
-  pesquisa-mercado.md
-  auditoria-qualidade.md
-  standup-log.md
-  sprint-reviews/
-    sprint-1.md
+ ├── arquitetura.md
+ ├── definition-of-done.md
+ ├── pesquisa-mercado.md
+ ├── auditoria-qualidade.md
+ ├── standup-log.md
+ └── sprint-reviews/
+      └── sprint-1.md
+      └── sprint-2.md
+
 src/
-  app.js
-  server.js
-  swagger.js
-  controllers/
-  models/
-  routes/
+ ├── app.js
+ ├── server.js
+ ├── swagger.js
+ ├── controllers/
+ ├── models/
+ └── routes/
 ```
+
+---
 
 ## 7. Variáveis de Ambiente
-- `PORT`: Porta em que o servidor roda. Padrão: `3000`.
 
-> **Observação:** o projeto atual não utiliza `.env` ou conexão com banco de dados.
+| Variável | Descrição                                      |
+| -------- | ---------------------------------------------- |
+| PORT     | Porta utilizada pelo servidor (padrão: `3000`) |
+
+> ⚠️ Observação: o projeto ainda não utiliza arquivo `.env` nem integração com banco de dados.

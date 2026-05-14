@@ -9,12 +9,18 @@
 | Mailtrap   | 500/mês (teste)          | US$ 15/mês | Sandbox para testes |
 
 ## Como o nosso projeto se compara?
-- Nosso projeto implementa uma API de notificações back-end que gerencia eventos, participantes e inscrições.
-- A solução atual é local e focada em persistência própria usando MySQL, enquanto serviços de mercado oferecem entrega de e-mail e templates prontos.
-- Recursos como envio de notificações em massa, monitoramento de entregabilidade e integração com provedores reais são diferenciais dos serviços de mercado.
+
+* Nosso projeto implementa uma API back-end para gerenciamento de eventos, participantes e inscrições.
+* A solução atual utiliza MySQL e persistência própria, enquanto serviços de mercado oferecem envio real de e-mails e templates prontos.
+* Recursos como notificações em massa, monitoramento de entregas e integração com provedores externos são diferenciais das plataformas de mercado.
+
+---
 
 ## O que poderíamos adotar no futuro?
-- Integração com SendGrid ou Mailgun para envio real de e-mails.
-- Templates dinâmicos de e-mail e gerenciamento de remetentes.
-- Monitoramento de entregas, bounces e métricas de abertura.
-- Ambiente de sandbox para testes com ferramentas como Mailtrap.
+
+* Integração com SendGrid ou Mailgun para envio de e-mails reais
+* Templates dinâmicos de e-mail
+* Monitoramento de entregas e métricas de abertura
+* Ambiente sandbox para testes com Mailtrap
+* Sistema de envio de notificações em massa
+* Suporte a múltiplos canais de notificação (SMS, push, etc.)
