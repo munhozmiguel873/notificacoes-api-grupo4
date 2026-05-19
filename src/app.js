@@ -5,7 +5,7 @@ const path = require('path');
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const app = express();
-
+require('./events/notificacaoObserver');
 
 // ============================================
 // MIDDLEWARES GLOBAIS
@@ -33,6 +33,7 @@ const participanteRoutes = require("./routes/participanteRoutes");
 const inscricaoRoutes = require("./routes/inscricaoRoutes");
 const exportRoutes = require('./routes/exportRoutes');
 const notificacaoRoutes = require('./routes/notificacaoRoutes');
+
 
 app.use("/eventos", eventoRoutes);
 app.use("/participantes", participanteRoutes);
