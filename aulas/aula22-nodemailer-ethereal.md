@@ -299,8 +299,8 @@ Crie um e-mail de **boas-vindas** que é enviado quando um novo participante se 
 
 ## ✅ Checklist — Antes de Sair
 
-- [ ] Nodemailer instalado
-- [ ] EmailService criado com Ethereal (conta de teste automática)
+- [x] Nodemailer instalado
+- [x] EmailService criado com Ethereal (conta de teste automática)
 - [ ] Rota POST /notificacoes/teste-email funcionando
 - [ ] E-mail visualizado no painel do Ethereal
 - [ ] Observer atualizado para enviar e-mail real ao criar inscrição
