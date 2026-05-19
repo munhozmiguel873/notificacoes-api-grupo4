@@ -1,7 +1,8 @@
 const { Evento } = require('../models');
 const { NotFoundError, ValidationError } = require('../errors/AppError');
-const appEmitter = require('../events/appEmitter');
+const appEmitter = require('../events/eventEmitter');
 
+// Buscar evento por ID
 async function buscarPorId(id) {
     const evento = await Evento.findByPk(id);
 
@@ -12,17 +13,24 @@ async function buscarPorId(id) {
     return evento;
 }
 
+// Criar evento
 async function criar(dados) {
     try {
         const novoEvento = await Evento.create(dados);
 
-        // dispara evento
+        // Dispara evento
         appEmitter.emit('evento:criado', novoEvento);
 
         return novoEvento;
+
     } catch (erro) {
+
         if (erro.name === 'SequelizeValidationError') {
-            const mensagens = erro.errors.map(e => e.message).join('; ');
+
+            const mensagens = erro.errors
+                .map(e => e.message)
+                .join('; ');
+
             throw new ValidationError(mensagens);
         }
 
@@ -30,7 +38,9 @@ async function criar(dados) {
     }
 }
 
+// Atualizar evento
 async function atualizar(id, dados) {
+
     const evento = await Evento.findByPk(id);
 
     if (!evento) {
@@ -38,11 +48,19 @@ async function atualizar(id, dados) {
     }
 
     try {
+
         await evento.update(dados);
+
         return evento;
+
     } catch (erro) {
+
         if (erro.name === 'SequelizeValidationError') {
-            const mensagens = erro.errors.map(e => e.message).join('; ');
+
+            const mensagens = erro.errors
+                .map(e => e.message)
+                .join('; ');
+
             throw new ValidationError(mensagens);
         }
 
@@ -50,7 +68,9 @@ async function atualizar(id, dados) {
     }
 }
 
+// Deletar evento
 async function deletar(id) {
+
     const evento = await Evento.findByPk(id);
 
     if (!evento) {
@@ -62,7 +82,9 @@ async function deletar(id) {
     return true;
 }
 
+// Listar todos eventos
 async function listarTodos(opcoes = {}) {
+
     const {
         pagina = 1,
         porPagina = 10,
@@ -74,6 +96,7 @@ async function listarTodos(opcoes = {}) {
     const where = {};
 
     if (busca) {
+
         const { Op } = require('sequelize');
 
         where.nome = {
@@ -97,7 +120,9 @@ async function listarTodos(opcoes = {}) {
     };
 }
 
+// Listar eventos futuros
 async function listarFuturos() {
+
     const { Op } = require('sequelize');
 
     const eventos = await Evento.findAll({

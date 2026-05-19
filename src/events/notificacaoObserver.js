@@ -1,4 +1,3 @@
-// src/events/notificacaoObserver.js
 const appEmitter = require('./eventEmitter');
 const { Notificacao, Participante, Evento, Inscricao } = require('../models');
 

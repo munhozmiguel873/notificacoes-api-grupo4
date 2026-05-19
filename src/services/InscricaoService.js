@@ -2,16 +2,23 @@ const { Inscricao, Evento, Participante } = require('../models');
 const { NotFoundError, ValidationError } = require('../errors/AppError');
 const appEmitter = require('../events/eventEmitter');
 
+// Criar inscrição
 async function criar(dados) {
     const { eventoId, participanteId } = dados;
 
     // Verificar se o evento existe
     const evento = await Evento.findByPk(eventoId);
-    if (!evento) throw new NotFoundError('Evento');
+
+    if (!evento) {
+        throw new NotFoundError('Evento');
+    }
 
     // Verificar se o participante existe
     const participante = await Participante.findByPk(participanteId);
-    if (!participante) throw new NotFoundError('Participante');
+
+    if (!participante) {
+        throw new NotFoundError('Participante');
+    }
 
     // Verificar duplicata
     const jaInscrito = await Inscricao.findOne({
@@ -22,7 +29,9 @@ async function criar(dados) {
     });
 
     if (jaInscrito) {
-        throw new ValidationError('Participante já inscrito neste evento');
+        throw new ValidationError(
+            'Participante já inscrito neste evento'
+        );
     }
 
     // Criar inscrição
@@ -37,6 +46,7 @@ async function criar(dados) {
     return novaInscricao;
 }
 
+// Listar todas inscrições
 async function listarTodas() {
     const inscricoes = await Inscricao.findAll({
         include: [
@@ -57,6 +67,7 @@ async function listarTodas() {
     return inscricoes;
 }
 
+// Listar inscrições por evento
 async function listarPorEvento(eventoId) {
     const evento = await Evento.findByPk(eventoId);
 
@@ -65,7 +76,9 @@ async function listarPorEvento(eventoId) {
     }
 
     const inscricoes = await Inscricao.findAll({
-        where: { evento_id: eventoId },
+        where: {
+            evento_id: eventoId
+        },
         include: [
             {
                 model: Participante,
@@ -79,6 +92,7 @@ async function listarPorEvento(eventoId) {
     return inscricoes;
 }
 
+// Cancelar inscrição
 async function cancelar(id) {
     const inscricao = await Inscricao.findByPk(id);
 
