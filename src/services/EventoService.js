@@ -1,5 +1,6 @@
 const { Evento } = require('../models');
 const { NotFoundError, ValidationError } = require('../errors/AppError');
+const appEmitter = require('../events/appEmitter');
 
 async function buscarPorId(id) {
     const evento = await Evento.findByPk(id);
@@ -14,13 +15,17 @@ async function buscarPorId(id) {
 async function criar(dados) {
     try {
         const novoEvento = await Evento.create(dados);
+
+        // dispara evento
+        appEmitter.emit('evento:criado', novoEvento);
+
         return novoEvento;
     } catch (erro) {
-        // O Sequelize lança SequelizeValidationError para validações do Model
         if (erro.name === 'SequelizeValidationError') {
             const mensagens = erro.errors.map(e => e.message).join('; ');
             throw new ValidationError(mensagens);
         }
+
         throw erro;
     }
 }
@@ -40,6 +45,7 @@ async function atualizar(id, dados) {
             const mensagens = erro.errors.map(e => e.message).join('; ');
             throw new ValidationError(mensagens);
         }
+
         throw erro;
     }
 }
@@ -50,7 +56,9 @@ async function deletar(id) {
     if (!evento) {
         throw new NotFoundError('Evento');
     }
+
     await evento.destroy();
+
     return true;
 }
 
@@ -63,15 +71,16 @@ async function listarTodos(opcoes = {}) {
         busca = null,
     } = opcoes;
 
-    // Construir filtro de busca
     const where = {};
 
     if (busca) {
         const { Op } = require('sequelize');
-        where.nome = { [Op.like]: `%${busca}%` };
+
+        where.nome = {
+            [Op.like]: `%${busca}%`
+        };
     }
 
-    // Buscar com paginação
     const { count, rows } = await Evento.findAndCountAll({
         where,
         order: [[ordenarPor, ordem.toUpperCase()]],
@@ -85,23 +94,21 @@ async function listarTodos(opcoes = {}) {
         pagina: parseInt(pagina),
         porPagina: parseInt(porPagina),
         totalPaginas: Math.ceil(count / parseInt(porPagina)),
-
     };
-
 }
 
 async function listarFuturos() {
     const { Op } = require('sequelize');
+
     const eventos = await Evento.findAll({
         where: {
             data: {
-                // Que operador usar para buscar datas MAIORES que agora?
-                // Resposta: Op.gt (greater than)
                 [Op.gt]: new Date(),
             }
         },
         order: [['data', 'ASC']],
     });
+
     return eventos;
 }
 

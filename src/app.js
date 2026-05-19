@@ -6,6 +6,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 
 require('./events/notificacaoObserver');
+require('./src/events/logObserver');
 
 const app = express();
 // ============================================
