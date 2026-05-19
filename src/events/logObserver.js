@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const appEmitter = require('./appEmitter');
+const appEmitter = require('./eventEmitter');
 
 // garante que a pasta logs exista
 const logsDir = path.join(__dirname, '../../logs');

@@ -1,4 +1,3 @@
-// src/events/eventEmitter.js
 const EventEmitter = require('events');
 
 // Um único emissor compartilhado por toda a aplicação
