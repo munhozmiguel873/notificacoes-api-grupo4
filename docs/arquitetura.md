@@ -133,7 +133,7 @@ src/
 
 ## 7. Variáveis de Ambiente
 
-| Variável | Descrição                                      |
+| Variável |                   Descrição                    |
 | -------- | ---------------------------------------------- |
 | PORT     | Porta utilizada pelo servidor (padrão: `3000`) |
 

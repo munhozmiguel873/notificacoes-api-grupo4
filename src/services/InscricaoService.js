@@ -15,33 +15,51 @@ async function criar(dados) {
 
     // Verificar duplicata
     const jaInscrito = await Inscricao.findOne({
-        where: { evento_id: eventoId, participante_id: participanteId }
+        where: {
+            evento_id: eventoId,
+            participante_id: participanteId
+        }
     });
-    if (jaInscrito) throw new ValidationError('Participante já inscrito neste evento');
 
+    if (jaInscrito) {
+        throw new ValidationError('Participante já inscrito neste evento');
+    }
 
-    // Criar a inscrição
+    // Criar inscrição
     const novaInscricao = await Inscricao.create({
         evento_id: eventoId,
         participante_id: participanteId,
     });
+
+    // Emitir evento
+    appEmitter.emit('inscricao:criada', novaInscricao);
+
     return novaInscricao;
 }
 
 async function listarTodas() {
-    // Listar com dados do evento e participante incluídos!
     const inscricoes = await Inscricao.findAll({
         include: [
-            { model: Evento, as: 'evento', attributes: ['id', 'nome', 'data'] },
-            { model: Participante, as: 'participante', attributes: ['id', 'nome', 'email'] },
+            {
+                model: Evento,
+                as: 'evento',
+                attributes: ['id', 'nome', 'data']
+            },
+            {
+                model: Participante,
+                as: 'participante',
+                attributes: ['id', 'nome', 'email']
+            },
         ],
         order: [['created_at', 'DESC']],
     });
+
     return inscricoes;
 }
 
 async function listarPorEvento(eventoId) {
     const evento = await Evento.findByPk(eventoId);
+
     if (!evento) {
         throw new NotFoundError('Evento');
     }
@@ -63,36 +81,24 @@ async function listarPorEvento(eventoId) {
 
 async function cancelar(id) {
     const inscricao = await Inscricao.findByPk(id);
+
     if (!inscricao) {
         throw new NotFoundError('Inscrição');
     }
-    await inscricao.destroy();
-    return { message: 'Inscrição cancelada com sucesso' };
+
+    await inscricao.update({
+        status: 'cancelada'
+    });
+
+    // Emitir evento
+    appEmitter.emit('inscricao:cancelada', inscricao);
+
+    return inscricao;
 }
 
-async function criar(dados) {
-  // ... validações e criação existentes ...
-
-  const novaInscricao = await Inscricao.create({
-    evento_id: eventoId,
-    participante_id: participanteId,
-  });
-
-  // Emitir evento — os observers serão notificados
-  appEmitter.emit('inscricao:criada', novaInscricao);
-
-  return novaInscricao;
-}
-
-async function cancelar(id) {
-  // ... lógica existente ...
-
-  await inscricao.update({ status: 'cancelada' });
-
-  // Emitir evento de cancelamento
-  appEmitter.emit('inscricao:cancelada', inscricao);
-
-  return inscricao;
-}
-
-module.exports = { criar, listarTodas, listarPorEvento, cancelar };
+module.exports = {
+    criar,
+    listarTodas,
+    listarPorEvento,
+    cancelar
+};
