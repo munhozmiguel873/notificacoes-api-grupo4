@@ -2,9 +2,9 @@ const baseTemplate = require('./baseTemplate');
 
 function cancelamentoInscricao(dados) {
 
-const { participanteNome, eventoNome } = dados;
+  const { participanteNome, eventoNome } = dados;
 
-const conteudo = `
+  const conteudo = `
 
 \<h2\>Inscrição Cancelada\</h2\>
 
@@ -23,7 +23,7 @@ const conteudo = `
 \<p\>Esperamos ver você em futuros eventos\!\</p\>
 `;
 
-return baseTemplate(conteudo);
+  return baseTemplate(conteudo);
 
 }
 

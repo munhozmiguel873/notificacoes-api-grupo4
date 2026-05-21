@@ -2,20 +2,20 @@ const baseTemplate = require('./baseTemplate');
 
 function confirmacaoInscricao(dados) {
 
-const { participanteNome, eventoNome, eventoData, eventoLocal } = dados;
+  const { participanteNome, eventoNome, eventoData, eventoLocal } = dados;
 
-const dataFormatada = new Date(eventoData).toLocaleDateString('pt-BR', {
+  const dataFormatada = new Date(eventoData).toLocaleDateString('pt-BR', {
 
-weekday: 'long',
+    weekday: 'long',
 
-year: 'numeric',
+    year: 'numeric',
 
-month: 'long',
+    month: 'long',
 
-day: 'numeric',
-});
+    day: 'numeric',
+  });
 
-const conteudo = `
+  const conteudo = `
 
 \<h2\>Inscrição Confirmada\! ✅\</h2\>
 
@@ -40,7 +40,7 @@ entre em contato com a organização.\</p\>
 \<p\>Até lá\! 🎉\</p\>
 `;
 
-return baseTemplate(conteudo);
+  return baseTemplate(conteudo);
 
 }
 

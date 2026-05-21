@@ -1,31 +1,31 @@
-// src/app.js
 const express = require("express");
 const cors = require("cors");
-const path = require('path');
+const path = require("path");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 
-require('./events/notificacaoObserver');
-require('./events/logObserver');
+require("./events/notificacaoObserver");
+require("./events/logObserver");
 
 const app = express();
+
 // ============================================
 // MIDDLEWARES GLOBAIS
 // ============================================
 app.use(express.json());
 app.use(cors());
 
+// ✅ CORREÇÃO AQUI (caminho certo)
 const responseTime = require("./middlewares/responseTime");
 app.use(responseTime);
 
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
+// arquivos estáticos
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 // ============================================
 // DOCUMENTAÇÃO
 // ============================================
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 
 // ============================================
 // ROTAS
@@ -33,18 +33,18 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const eventoRoutes = require("./routes/eventoRoutes");
 const participanteRoutes = require("./routes/participanteRoutes");
 const inscricaoRoutes = require("./routes/inscricaoRoutes");
-const exportRoutes = require('./routes/exportRoutes');
-const notificacaoRoutes = require('./routes/notificacaoRoutes');
-
+const exportRoutes = require("./routes/exportRoutes");
+const notificacaoRoutes = require("./routes/notificacaoRoutes");
 
 app.use("/eventos", eventoRoutes);
 app.use("/participantes", participanteRoutes);
 app.use("/inscricoes", inscricaoRoutes);
-app.use('/exportar', exportRoutes);
-app.use('/notificacoes', notificacaoRoutes);
+app.use("/exportar", exportRoutes);
+app.use("/notificacoes", notificacaoRoutes);
 
-
-// Rota raiz (informativa)
+// ============================================
+// ROTA RAIZ
+// ============================================
 app.get("/", (req, res) => {
     res.json({
         mensagem: "API de Notificações",
@@ -54,13 +54,13 @@ app.get("/", (req, res) => {
             eventos: "/eventos",
             participantes: "/participantes",
             inscricoes: "/inscricoes",
-
+            notificacoes: "/notificacoes",
         },
     });
 });
 
 // ============================================
-// MIDDLEWARES DE ERRO (sempre por último!)
+// MIDDLEWARES DE ERRO (sempre por último)
 // ============================================
 const notFound = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/errorHandler");

@@ -2,47 +2,44 @@ const nodemailer = require('nodemailer');
 
 let transporter = null;
 
-// Configurações do MailPit
-const SMTP_HOST = process.env.SMTP_HOST || '10.137.146.106';
+// Endereço do MailPit (configurado via .env)
+const SMTP_HOST = process.env.SMTP_HOST || 'localhost';
 const SMTP_PORT = process.env.SMTP_PORT || 1025;
-
 const MAILPIT_URL = `http://${SMTP_HOST}:8025`;
 
 /**
- * Inicializa o serviço de e-mail
+ * Inicializa o transporter conectando ao MailPit.
+ * Chamado uma vez ao iniciar o servidor.
  */
 async function inicializar() {
   transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port: parseInt(SMTP_PORT),
     secure: false,
-    tls: {
-      rejectUnauthorized: false,
-    },
+    tls: { rejectUnauthorized: false },
   });
 
+  // Testar conexão
   try {
     await transporter.verify();
 
-    console.log('══════════════════════════════════════');
+    console.log('═══════════════════════════════════════════');
     console.log('📧 Servidor de e-mail conectado!');
-    console.log(`📨 SMTP: ${SMTP_HOST}:${SMTP_PORT}`);
-    console.log(`🌐 Painel MailPit: ${MAILPIT_URL}`);
-    console.log('══════════════════════════════════════');
-
+    console.log(`   SMTP: ${SMTP_HOST}:${SMTP_PORT}`);
+    console.log(`   Painel: ${MAILPIT_URL}`);
+    console.log('═══════════════════════════════════════════');
   } catch (erro) {
-    console.error('⚠️ Erro ao conectar no MailPit:', erro.message);
+    console.error('⚠️ Servidor de e-mail indisponível:', erro.message);
+    console.error('   Verifique se o MailPit está rodando e o IP está correto.');
   }
 }
 
 /**
- * Enviar e-mail
+ * Envia um e-mail.
  */
 async function enviar(para, assunto, html) {
   if (!transporter) {
-    throw new Error(
-      'EmailService não inicializado. Chame inicializar() primeiro.'
-    );
+    throw new Error('EmailService não inicializado. Chame inicializar() primeiro.');
   }
 
   const info = await transporter.sendMail({
@@ -52,11 +49,8 @@ async function enviar(para, assunto, html) {
     html: html,
   });
 
-  console.log('══════════════════════════════════════');
-  console.log(`📧 E-mail enviado para: ${para}`);
-  console.log(`🆔 Message ID: ${info.messageId}`);
-  console.log(`🌐 Visualizar em: ${MAILPIT_URL}`);
-  console.log('══════════════════════════════════════');
+  console.log(`📧 E-mail enviado para ${para} (ID: ${info.messageId})`);
+  console.log(`🔎 Visualizar em: ${MAILPIT_URL}`);
 
   return {
     messageId: info.messageId,

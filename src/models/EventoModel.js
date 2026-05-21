@@ -1,9 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
-
-const Evento = sequelize.define(
-    "Evento",
-    {
+module.exports = (sequelize, DataTypes) => {
+    const Evento = sequelize.define("Evento", {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -12,40 +8,20 @@ const Evento = sequelize.define(
         nome: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: {
-                notEmpty: { msg: "Nome não pode ser vazio" },
-                len: { args: [3, 255], msg: "Nome deve ter entre 3 e 255 caracteres" },
-            },
         },
-        descricao: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
+        descricao: DataTypes.TEXT,
         data: {
             type: DataTypes.DATE,
             allowNull: false,
         },
-        local: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        capacidade: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            validate: {
-                min: { args: [1], msg: "Capacidade deve ser pelo menos 1" }
-            }
-        },
-        banner: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        }
-    },
-    {
+        local: DataTypes.STRING,
+        capacidade: DataTypes.INTEGER,
+        banner: DataTypes.STRING
+    }, {
         tableName: "eventos",
         timestamps: true,
         underscored: true,
-    }
-);
+    });
 
-module.exports = Evento;
+    return Evento;
+};
