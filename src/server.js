@@ -1,5 +1,5 @@
 require('dotenv').config();
-require("./events/participanteObserver");
+// require("./events/participanteObserver");
 
 const app = require('./app');
 const { sequelize } = require('./models');
