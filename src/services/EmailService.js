@@ -1,45 +1,48 @@
 const nodemailer = require('nodemailer');
 
 let transporter = null;
-let contaTeste = null;
+
+// Configurações do MailPit
+const SMTP_HOST = process.env.SMTP_HOST || '10.137.146.106';
+const SMTP_PORT = process.env.SMTP_PORT || 1025;
+
+const MAILPIT_URL = `http://${SMTP_HOST}:8025`;
 
 /**
- * Inicializa o transporter com uma conta de teste do Ethereal.
- * Chamado uma vez ao iniciar o servidor.
+ * Inicializa o serviço de e-mail
  */
 async function inicializar() {
-  // Criar conta de teste automaticamente
-  contaTeste = await nodemailer.createTestAccount();
-
-  console.log('═══════════════════════════════════════════');
-  console.log('📧 E-mail de teste configurado!');
-  console.log(`   Usuário: ${contaTeste.user}`);
-  console.log(`   Senha:   ${contaTeste.pass}`);
-  console.log(`   Painel:  https://ethereal.email/login`);
-  console.log('═══════════════════════════════════════════');
-
-  // Criar o transporter (o "carteiro" que envia os e-mails)
   transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
+    host: SMTP_HOST,
+    port: parseInt(SMTP_PORT),
     secure: false,
-    auth: {
-      user: contaTeste.user,
-      pass: contaTeste.pass,
+    tls: {
+      rejectUnauthorized: false,
     },
   });
+
+  try {
+    await transporter.verify();
+
+    console.log('══════════════════════════════════════');
+    console.log('📧 Servidor de e-mail conectado!');
+    console.log(`📨 SMTP: ${SMTP_HOST}:${SMTP_PORT}`);
+    console.log(`🌐 Painel MailPit: ${MAILPIT_URL}`);
+    console.log('══════════════════════════════════════');
+
+  } catch (erro) {
+    console.error('⚠️ Erro ao conectar no MailPit:', erro.message);
+  }
 }
 
 /**
- * Envia um e-mail.
- * @param {string} para - E-mail do destinatário
- * @param {string} assunto - Assunto do e-mail
- * @param {string} html - Conteúdo HTML do e-mail
- * @returns {object} Informações do envio, incluindo URL de preview
+ * Enviar e-mail
  */
 async function enviar(para, assunto, html) {
   if (!transporter) {
-    throw new Error('EmailService não inicializado. Chame inicializar() primeiro.');
+    throw new Error(
+      'EmailService não inicializado. Chame inicializar() primeiro.'
+    );
   }
 
   const info = await transporter.sendMail({
@@ -49,15 +52,15 @@ async function enviar(para, assunto, html) {
     html: html,
   });
 
-  // O Ethereal gera uma URL para visualizar o e-mail enviado!
-  const previewUrl = nodemailer.getTestMessageUrl(info);
-
-  console.log(`📧 E-mail enviado para ${para}`);
-  console.log(`   Preview: ${previewUrl}`);
+  console.log('══════════════════════════════════════');
+  console.log(`📧 E-mail enviado para: ${para}`);
+  console.log(`🆔 Message ID: ${info.messageId}`);
+  console.log(`🌐 Visualizar em: ${MAILPIT_URL}`);
+  console.log('══════════════════════════════════════');
 
   return {
     messageId: info.messageId,
-    previewUrl: previewUrl,
+    visualizarEm: MAILPIT_URL,
   };
 }
 

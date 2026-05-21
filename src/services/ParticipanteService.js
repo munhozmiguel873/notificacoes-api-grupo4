@@ -5,6 +5,9 @@ const {
   ValidationError,
 } = require("../errors/AppError");
 
+// 🔥 IMPORTAR EVENT EMITTER
+const appEmitter = require("../events/eventEmitter");
+
 async function listarTodos() {
   const participantes = await Participante.findAll({
     order: [["createdAt", "ASC"]],
@@ -27,7 +30,11 @@ async function criar(dados) {
   try {
     const novoParticipante = await Participante.create(dados);
 
+    // 🔥 DISPARAR EVENTO AQUI
+    appEmitter.emit("participante:criado", novoParticipante);
+
     return novoParticipante;
+
   } catch (erro) {
     if (erro.name === "SequelizeValidationError") {
       const mensagens = erro.errors

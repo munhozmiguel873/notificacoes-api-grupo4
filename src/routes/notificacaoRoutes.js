@@ -4,26 +4,30 @@ const router = express.Router();
 const { Notificacao, Inscricao, Evento, Participante } = require('../models');
 const EmailService = require('../services/EmailService');
 
-
+/**
+ * GET /notificacoes
+ */
 router.get('/', async (req, res, next) => {
   try {
     const notificacoes = await Notificacao.findAll({
-      include: [{
-        model: Inscricao,
-        as: 'inscricao',
-        include: [
-          {
-            model: Evento,
-            as: 'evento',
-            attributes: ['nome']
-          },
-          {
-            model: Participante,
-            as: 'participante',
-            attributes: ['nome', 'email']
-          },
-        ],
-      }],
+      include: [
+        {
+          model: Inscricao,
+          as: 'inscricao',
+          include: [
+            {
+              model: Evento,
+              as: 'evento',
+              attributes: ['nome'],
+            },
+            {
+              model: Participante,
+              as: 'participante',
+              attributes: ['nome', 'email'],
+            },
+          ],
+        },
+      ],
       order: [['created_at', 'DESC']],
     });
 
@@ -33,18 +37,26 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+/**
+ * POST /notificacoes/teste-email
+ */
 router.post('/teste-email', async (req, res, next) => {
   try {
     const resultado = await EmailService.enviar(
       'teste@exemplo.com',
       'Teste da API de Notificações',
-      '<h1>Funcionou! 🎉</h1><p>Este e-mail foi enviado pela nossa API.</p>'
+      `
+        <h1>Funcionou! 🎉</h1>
+        <p>Este e-mail foi enviado pela nossa API.</p>
+      `
     );
 
     res.json({
       mensagem: 'E-mail de teste enviado!',
-      previewUrl: resultado.previewUrl,
+      visualizarEm: resultado.visualizarEm,
+      messageId: resultado.messageId,
     });
+
   } catch (erro) {
     next(erro);
   }
